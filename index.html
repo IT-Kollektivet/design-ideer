@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>WIFI-regnbue</title>
+    <style>
+        body { margin:0; padding:0;}
+        h1 {
+            text-align: center;
+        }
+        .center {
+            margin: 0 auto;
+            width:90%;
+        }
+        .rainbow {
+            position: absolute;
+            right:0;
+            top:0;
+        }
+
+    </style>
+    <script src="bower_components/raphael/raphael-min.js"></script>
+</head>
+<body>
+    <div class="rainbow"></div>
+    <div class="center">
+        <h1>IT Kollektivet</h1>
+    </div>
+    <script>
+    (function (win, doc) {
+         colors = [ ["#C1272C", "#fff", "#C1272C", "#fff", "#C1272C", "#fff"], ["#F18111", "#fff", "#6ABE28", "#fff", "#672FAE", "#fff"], ["#1347EE", "#fff", "#6ABE28", "#fff", "#F18111", "#fff"], ["#5727C4", "#fff", "#6ABE28", "#fff", "#F18111", "#fff"], ["#662DAE", "#fff", "#BEEA23", "#fff", "#F18111", "#fff"]];
+        var pos = win.innerWidth;
+        var size = Math.floor(pos/2);
+        // Creates canvas 320 × 200 at 10, 50
+        var paper = Raphael(doc.querySelector(".rainbow"), size, size);
+        var radius = size/2;
+        var counter = function(to, seed) {
+          seed = seed || 0;
+          return function () {
+            return (seed++ % to);
+          };
+        };
+        var nextColor = counter(colors.length);
+
+        var circles = paper.set();
+
+        var change = function(color, i, all) {
+            //console.log("i", i, i % 2 === 0)
+            var r = radius/6 * (6-i)
+            // ,  r2= i % 2 === 0 ? r+(r*.1) : r-(r*.1);
+            //console.log("radius",r2)
+            if(circles.length !== all.length)
+                circles.push(paper.circle(radius*2, 0, r ).attr("fill", color));
+            else
+                circles[i].animate({fill: color }, 1000);
+        }
+
+        var run = function() {
+            colors[nextColor()].forEach(change);
+            circles.attr("stroke", "#fff");
+        };
+        run();
+        win.setInterval(run, 2000);
+    }(window, document))
+    </script>
+</body>
+</html>
